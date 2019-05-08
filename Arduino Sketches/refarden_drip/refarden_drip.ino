@@ -4,7 +4,7 @@
 
 
 #define ONE_WIRE_BUS 2
-#define TIME_HEADER "I" // Header tag for serial time sync message
+#define TIME_HEADER "T" // Header tag for serial time sync message
 #define TIME_REQUEST 7  // ASCII bell character requests a time sync message 
 
 OneWire oneWire(ONE_WIRE_BUS);
@@ -20,6 +20,7 @@ int temp_sense = A5;
 
 int count2     = 0;
 
+bool timerState = true;
 
 
 //flooding system parameters
@@ -67,7 +68,20 @@ void loop() {
   //temp sensor feedback
     sensors.requestTemperatures();
     printTemperature(thermometer);
+    
+    while(timerState){
+      
+    Serial.println("z");
+    if(Serial.available()){
+      processSyncMessage();
+    }
+    if(timeStatus() == timeSet){
+      Serial.println("x");
+      timerState = 0;
+    }
   
+    }
+    
   //3 minutes of flooding every 4 hours
     Flood(floodDelay);
 
@@ -153,4 +167,46 @@ void printAddress(DeviceAddress deviceAddress)
     if (deviceAddress[i] < 16) Serial.print("0");
     Serial.print(deviceAddress[i], HEX);
   }
+}
+
+
+void digitalClockDisplay(){
+  // digital clock display of the time
+  Serial.print(hour());
+  printDigits(minute());
+  printDigits(second());
+  Serial.print(" ");
+  Serial.print(day());
+  Serial.print(" ");
+  Serial.print(month());
+  Serial.print(" ");
+  Serial.print(year()); 
+  Serial.println(); 
+}
+
+void printDigits(int digits){
+  // utility function for digital clock display: prints preceding colon and leading 0
+  Serial.print(":");
+  if(digits < 10)
+    Serial.print('0');
+  Serial.print(digits);
+}
+
+
+void processSyncMessage() {
+  unsigned long pctime;
+  const unsigned long DEFAULT_TIME = 1357041600; // Jan 1 2013
+
+  if(Serial.find(TIME_HEADER)) {
+     pctime = Serial.parseInt();
+     if( pctime >= DEFAULT_TIME) { // check the integer is a valid time (greater than Jan 1 2013)
+       setTime(pctime); // Sync Arduino clock to the time received on the serial port
+     }
+  }
+}
+
+time_t requestSync()
+{
+  Serial.write(TIME_REQUEST);  
+  return 0; // the time will be sent later in response to serial mesg
 }

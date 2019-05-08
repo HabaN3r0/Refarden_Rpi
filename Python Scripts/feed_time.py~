@@ -28,7 +28,3 @@ while(state2):
 		ser.close()
 		print("halleluyah")
 		state2 = 0
-	if message == "c":
-		messageTime = ser.readline()
-		print(messageTime)
-		

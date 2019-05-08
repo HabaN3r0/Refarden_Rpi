@@ -1,0 +1,19 @@
+import Tkinter
+from Tkinter import *
+
+top = Tkinter.Tk()
+
+def TurnOn():
+	sleep(0.1)
+	
+def TurnOff():
+	sleep(0.1)
+
+OnButton = Tkinter.Button(top, text = "LED ON", command = TurnOn)
+OffButton = Tkinter.Button(top, text = "LED OFF", command = TurnOff)
+label1 = Label(top, fg = "green")
+
+label1.pack()
+OnButton.pack()
+OffButton.pack()
+top.mainloop()
