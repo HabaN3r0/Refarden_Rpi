@@ -63,24 +63,18 @@ void loop(){
         message = Serial.read();
         
         if(message == 'a'){             //pump1 flood
-         digitalWrite(pump1, LOW);
+          digitalWrite(pump1, LOW);
          Serial.println("Flood!");
-         /*floodTimer = millis();
-         floodState = 0;
-         countFlood = 0;
-          Flood();*/
         }
         else if(message == 'b'){        //pump1 Drain
           digitalWrite(pump1, HIGH);
-          Serial.println("Drain!");
+         Serial.println("Drain!");
         }
         else if(message == 'c'){        //light1 on
           digitalWrite(light1, LOW);
-          Serial.println("Light!");
         }
         else if(message == 'd'){        //light1 off
           digitalWrite(light1, HIGH);
-          Serial.println("Dark!");
         }
         
       }
