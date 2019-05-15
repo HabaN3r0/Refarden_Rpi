@@ -12,14 +12,14 @@ class DripTest:
 		self.state1 = True
 		self.stateSerial = True
 		self.stateLight = 0
-		self.floodInterval = 5
+		self.floodInterval = 4
 		self.stateLight1 = 0
-		self.floodInterval1 = 10
+		self.floodInterval1 = 6
 		self.lightOnTime = "08:00:00"
 		self.lightOffTime = "02:00:00"
 		
 		self.lightOnTime1 = "08:00:00"
-		self.lightOffTime1 = "02:00:00"
+		self.lightOffTime1 = "22:00:00"
 		self.ser = None
 		self.top =None
 		self.lightOffHour = None
@@ -33,8 +33,8 @@ class DripTest:
 		self.tempInfo = None
 		
 
-		self.lastFlood = datetime.datetime.now().minute
-		self.lastFlood1 = datetime.datetime.now().minute
+		self.lastFlood = datetime.datetime.now().hour
+		self.lastFlood1 = datetime.datetime.now().hour
 		
 		self.port, self.baud = self.FindPort()
 
@@ -134,7 +134,7 @@ class DripTest:
 			time.sleep(2)
 		self.ser.write("REFb")
 		time.sleep(2)
-		self.lastFlood = datetime.datetime.now().minute
+		self.lastFlood = datetime.datetime.now().hour
 	
 	def Flood1(self):
 		time.sleep(1)
@@ -147,7 +147,7 @@ class DripTest:
 			time.sleep(2)
 		self.ser.write("REFf")
 		time.sleep(2)
-		self.lastFlood1 = datetime.datetime.now().minute
+		self.lastFlood1 = datetime.datetime.now().hour
 
 	def SetLightOnTime(self):
 		print(self.lightOffEntry.get())
@@ -199,23 +199,23 @@ class DripTest:
 		if datetime.datetime.now().hour == 0:
 			self.lastFlood = 0
 			self.lastFlood1 = 0
-		if datetime.datetime.now().minute >= (self.lastFlood + self.floodInterval):
+		if datetime.datetime.now().hour >= (self.lastFlood + self.floodInterval):
 			print(self.lastFlood)
 			print(self.floodInterval)
-			print(datetime.datetime.now().minute)
+			print(datetime.datetime.now().hour)
 			self.Flood()
 		
-		if datetime.datetime.now().minute >= (self.lastFlood1 + self.floodInterval1):
+		if datetime.datetime.now().hour >= (self.lastFlood1 + self.floodInterval1):
 			print(self.lastFlood1)
 			print(self.floodInterval1)
-			print(datetime.datetime.now().minute)
+			print(datetime.datetime.now().hour)
 			self.Flood1()
 		
 		if (self.lightOnHour > self.lightOffHour) or (self.lightOnHour == self.lightOffHour and self.lightOnMinute > self.lightOffMinute):
 
 			if datetime.datetime.now().hour >= self.lightOnHour and datetime.datetime.now().minute	>= self.lightOnMinute:
 				if(self.stateLight != 1):
-					time.sleep(1)
+					time.sleep(2)
 					self.ser.write("REFc")
 					time.sleep(2)
 					self.stateLight = 1
@@ -261,7 +261,7 @@ class DripTest:
 
 			if datetime.datetime.now().hour >= self.lightOnHour1 and datetime.datetime.now().minute	>= self.lightOnMinute1:
 				if(self.stateLight1 != 1):
-					time.sleep(1)
+					time.sleep(2)
 					self.ser.write("REFg")
 					time.sleep(2)
 					self.stateLight1 = 1
@@ -281,14 +281,14 @@ class DripTest:
 					self.stateLight1 = 3
 					print('c1')
 		else:
-			if (datetime.datetime.now().hour == self.lightOffHour and datetime.datetime.now().minute >= self.lightOffMinute) or datetime.datetime.now().hour > self.lightOffHour:
+			if (datetime.datetime.now().hour == self.lightOffHour1 and datetime.datetime.now().minute >= self.lightOffMinute1) or datetime.datetime.now().hour > self.lightOffHour1:
 				if(self.stateLight1 != 4):
 					time.sleep(1)
 					self.ser.write("REFh")
 					time.sleep(2)
 					self.stateLight1 = 4
 					print('d1')
-			elif (datetime.datetime.now().hour == self.lightOnHour and datetime.datetime.now().minute	>= self.lightOnMinute) or datetime.datetime.now().hour > self.lightOnHour:
+			elif (datetime.datetime.now().hour == self.lightOnHour1 and datetime.datetime.now().minute	>= self.lightOnMinute1) or datetime.datetime.now().hour > self.lightOnHour1:
 				if(self.stateLight1 != 5):
 					time.sleep(1)
 					self.ser.write("REFg")
