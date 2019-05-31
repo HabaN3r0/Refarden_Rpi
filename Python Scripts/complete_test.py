@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 import datetime
+import threading
 import sys
 import glob
 import serial
@@ -12,7 +15,7 @@ class DripTest:
 		self.state1 = True
 		self.stateSerial = True
 		self.stateLight = 0
-		self.floodInterval = 4
+		self.floodInterval = 8
 		self.stateLight1 = 0
 		self.floodInterval1 = 6
 		self.lightOnTime = ["08:00"]
@@ -47,6 +50,12 @@ class DripTest:
 
 		self.lastFlood = datetime.datetime.now().hour
 		self.lastFlood1 = datetime.datetime.now().hour
+		self.floodTiming = datetime.datetime.now().hour
+		self.floodStart = False
+		self.floodState = True
+		self.floodTiming1 = datetime.datetime.now().hour
+		self.floodStart1 = False
+		self.floodState1 = True
 		
 		self.port, self.baud = self.FindPort()
 
@@ -134,32 +143,33 @@ class DripTest:
 				pass
 		return(result[0], self.baud)
 	
+	def FloodThread(self):
+		self.ser.write("REFa")
+		time.sleep(3)
+		self.ser.write("REFb")
+		self.floodState = True;
+		time.sleep(1)
+		
+		self.lastFlood = datetime.datetime.now().hour	
 	
 	def Flood(self):
-		time.sleep(1)
-		self.ser.write("REFa")
-		time.sleep(30)
-		for x in range(5):
-			self.ser.write("REFb")
-			time.sleep(9)
-			self.ser.write("REFa")
-			time.sleep(3)
-		self.ser.write("REFb")
-		time.sleep(2)
-		self.lastFlood = datetime.datetime.now().hour
-	
-	def Flood1(self):
-		time.sleep(1)
+		pass
+		#t = threading.Thread(target = self.FloodThread)
+		#t.start()
+
+	def FloodThread1(self):
 		self.ser.write("REFe")
 		time.sleep(30)
-		for x in range(5):
-			self.ser.write("REFf")
-			time.sleep(9)
-			self.ser.write("REFe")
-			time.sleep(3)
 		self.ser.write("REFf")
+		self.floodState1 = True;
 		time.sleep(2)
-		self.lastFlood1 = datetime.datetime.now().hour
+		
+		self.lastFlood1 = datetime.datetime.now().hour	
+	
+	def Flood1(self):
+		t1 = threading.Thread(target = self.FloodThread1)
+		t1.start()
+	
 		
 	def Lights(self):		
 		if self.lightOnTime[0] > self.lightOffTime[0]:
@@ -174,19 +184,31 @@ class DripTest:
 					elif datetime.datetime.now().hour > int(self.lightOffTime[self.lightCount - 1 - i][0:2]) or (datetime.datetime.now().hour == int(self.lightOffTime[self.lightCount - i - 1][0:2]) and datetime.datetime.now().minute > int(self.lightOffTime[self.lightCount - i - 1][3:5])):
 						self.state = False
 						break
+			if self.lightOnTime[-1] < self.lightOffTime[0]:
+				if datetime.datetime.now() < int(self.lightOffTime[0][0:2]) and datetime.datetime.now() > int(self.lightOnTime[-1][0:2]):
+					self.state = False						
 		elif self.lightOffTime[0] > self.lightOnTime[0]:
 			if datetime.datetime.now().hour < int(self.lightOnTime[0][0:2]) or (datetime.datetime.now().hour == int(self.lightOnTime[0][0:2]) and datetime.datetime.now().minute < int(self.lightOnTime[0][3:5])):
 				self.state = False
-				print('a')
+				#print('a')
 			else:
 				self.lightCount = len(self.lightOnTime)
 				for i in range(self.lightCount):
 					if datetime.datetime.now().hour > int(self.lightOffTime[self.lightCount - 1 - i][0:2]) or (datetime.datetime.now().hour == int(self.lightOffTime[self.lightCount - i - 1][0:2]) and datetime.datetime.now().minute > int(self.lightOffTime[self.lightCount - i - 1][3:5])):       
 						self.state = False
+						#print('c')
 						break
 					elif datetime.datetime.now().hour > int(self.lightOnTime[self.lightCount - 1 - i][0:2]) or (datetime.datetime.now().hour == int(self.lightOnTime[self.lightCount - i - 1][0:2]) and datetime.datetime.now().minute > int(self.lightOnTime[self.lightCount - i - 1][3:5])):
 						self.state = True
 						break
+			print((self.lightOffTime[-1], self.lightOnTime[0]))
+			if self.lightOffTime[-1] < self.lightOnTime[0]:
+				#print('e')
+				if datetime.datetime.now().hour < int(self.lightOnTime[0][0:2]) and datetime.datetime.now().hour >= int(self.lightOffTime[-1][0:2]):
+					self.state = False
+					#print('d')
+
+			
 		else:
 			print("Time for off and on should never be the same. Please restart the program")
 					
@@ -216,10 +238,13 @@ class DripTest:
 					elif datetime.datetime.now().hour > int(self.lightOffTime1[self.lightCount1 - 1 - i][0:2]) or (datetime.datetime.now().hour == int(self.lightOffTime1[self.lightCount1 - i - 1][0:2]) and datetime.datetime.now().minute > int(self.lightOffTime1[self.lightCount1 - i - 1][3:5])):
 						self.state1 = False
 						break
+			if self.lightOffTime1[-1] < self.lightOnTime1[0]:
+				if datetime.datetime.now().hour < int(self.lightOnTime1[0][0:2]) and datetime.datetime.now().hour > int(self.lightOffTime1[-1][0:2]):
+					self.state1 = False
 		elif self.lightOffTime1[0] > self.lightOnTime1[0]:
+			
 			if datetime.datetime.now().hour < int(self.lightOnTime1[0][0:2]) or (datetime.datetime.now().hour == int(self.lightOnTime1[0][0:2]) and datetime.datetime.now().minute < int(self.lightOnTime1[0][3:5])):
 				self.state1 = False
-				print('a1')
 			else:
 				self.lightCount1 = len(self.lightOnTime1)
 				for i in range(self.lightCount1):
@@ -229,6 +254,9 @@ class DripTest:
 					elif datetime.datetime.now().hour > int(self.lightOnTime1[self.lightCount1 - 1 - i][0:2]) or (datetime.datetime.now().hour == int(self.lightOnTime1[self.lightCount1 - i - 1][0:2]) and datetime.datetime.now().minute > int(self.lightOnTime1[self.lightCount1 - i - 1][3:5])):
 						self.state1 = True
 						break
+			if self.lightOffTime1[-1] < self.lightOnTime1[0]:
+				if datetime.datetime.now().hour < int(self.lightOnTime1[0][0:2]) and datetime.datetime.now().hour >= int(self.lightOffTime1[-1][0:2]):
+					self.state1 = False
 		else:
 			print("Time for off and on should never be the same. Please restart the program")
 
@@ -250,7 +278,7 @@ class DripTest:
 	def SetLightOnTime(self):
 		##print(self.lightOnEntry.get())
 		placeHolder = self.lightOnEntry.get().strip().split(',')
-		placeHolder.sort()
+		##placeHolder.sort()
 		placeHolder = [x.strip() for x in placeHolder]
 		self.lightOnTime = [placeHolder[0]]
 		self.lightOffTime = [placeHolder[1]]
@@ -276,7 +304,7 @@ class DripTest:
 	def SetLightOnTime1(self):
 		##print(self.lightOnEntry.get())
 		placeHolder = self.lightOnEntry1.get().strip().split(',')
-		placeHolder.sort()
+		##placeHolder.sort()
 		placeHolder = [x.strip() for x in placeHolder]
 		self.lightOnTime1 = [placeHolder[0]]
 		self.lightOffTime1 = [placeHolder[1]]
@@ -300,36 +328,32 @@ class DripTest:
 		
 
 	def MainEvent(self):
-		'''
-		self.lightOnHour = int(self.lightOnTime[0:2])
-		self.lightOnMinute = int(self.lightOnTime[3:5])
-		self.lightOffHour = int(self.lightOffTime[0:2])
-		self.lightOffMinute = int(self.lightOffTime[3:5])
-		self.lightOnHour1 = int(self.lightOnTime1[0:2])
-		self.lightOnMinute1 = int(self.lightOnTime1[3:5])
-		self.lightOffHour1 = int(self.lightOffTime1[0:2])
-		self.lightOffMinute1 = int(self.lightOffTime1[3:5])
-		'''
 
 		##self.GetTemperature()
 
 		if datetime.datetime.now().hour == 0:
 			self.lastFlood = 0
 			self.lastFlood1 = 0
+			
 		if datetime.datetime.now().hour >= (self.lastFlood + self.floodInterval):
 			print(self.lastFlood)
 			print(self.floodInterval)
 			print(datetime.datetime.now().hour)
-			self.Flood()
-		
+			if self.floodState:
+				self.floodState = False
+				self.Flood()
+
 		if datetime.datetime.now().hour >= (self.lastFlood1 + self.floodInterval1):
 			print(self.lastFlood1)
 			print(self.floodInterval1)
 			print(datetime.datetime.now().hour)
-			self.Flood1()
+			if self.floodState1:
+				self.floodState1 = False
+				self.Flood1()
 			
 		self.Lights()
 		self.Lights1()
+
 		'''
 		if (self.lightOnHour > self.lightOffHour) or (self.lightOnHour == self.lightOffHour and self.lightOnMinute > self.lightOffMinute):
 
