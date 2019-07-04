@@ -6,8 +6,15 @@ import sys
 import glob
 import serial
 import time
-import Tkinter as Tkinter 	#change when port to pi
-from Tkinter import * 		#change when port to pi
+import os
+if os.name == "posix":
+	import tkinter as Tkinter 	#change when port to pi
+	from tkinter import * 		#change when port to pi
+elif os.name == "nt":
+	import Tkinter as Tkinter 	#change when port to pi
+	from Tkinter import * 		#change when port to pi
+else:
+	print ("Tkinter not imported!")
 
 class DripTest:
 
