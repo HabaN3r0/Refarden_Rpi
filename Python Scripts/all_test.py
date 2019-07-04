@@ -6,8 +6,8 @@ import sys
 import glob
 import serial
 import time
-import Tkinter as Tkinter 	#change when port to pi
-from Tkinter import * 		#change when port to pi
+import tkinter as Tkinter 	#change when port to pi
+from tkinter import * 		#change when port to pi
 
 class DripTest:
 
@@ -35,19 +35,8 @@ class DripTest:
 		self.top = None
 		self.serState = True
 		
-		'''
-		self.lightOffHour = None
-		self.lightOffMinute = None
-		self.lightOnHour = None
-		self.lightOnMinute = None
-		self.lightOffHour1 = None
-		self.lightOffMinute1 = None
-		self.lightOnHour1 = None
-		self.lightOnMinute1 = None
-		'''
 		self.tempInfo = None
 		
-
 		self.lastFlood = datetime.datetime.now().hour
 		self.lastFlood1 = datetime.datetime.now().hour
 		self.floodTiming = datetime.datetime.now().hour
@@ -59,16 +48,16 @@ class DripTest:
 		
 
 		# activate when port to pi
-		# self.port, self.baud = self.FindPort()
+		self.port, self.baud = self.FindPort()
 
-		# while(self.serState):
+		while(self.serState):
 	
-		# 	try:
-		# 		self.ser = serial.Serial(self.port, self.baud)
-		# 		self.ser.reset_input_buffer()
-		# 		self.serState = False
-		# 	except:
-		# 		print("Port not connected")
+			try:
+				self.ser = serial.Serial(self.port, self.baud)
+				self.ser.reset_input_buffer()
+				self.serState = False
+			except:
+				print("Port not connected")
 
 
 		self.top = Tkinter.Tk()
@@ -106,9 +95,6 @@ class DripTest:
 		self.labelLightOn.pack()
 		self.lightOnEntry.pack()
 		self.lightOnBtn.pack()
-		##self.labelLightOff.pack()
-		##self.lightOffEntry.pack()
-		##self.lightOffBtn.pack()
 		self.labelPumpInterval.pack()
 		self.pumpIntervalEntry.pack()
 		self.pumpIntervalBtn.pack()
@@ -116,9 +102,6 @@ class DripTest:
 		self.labelLightOn1.pack()
 		self.lightOnEntry1.pack()
 		self.lightOnBtn1.pack()
-		##self.labelLightOff1.pack()
-		##self.lightOffEntry1.pack()
-		##self.lightOffBtn1.pack()
 		self.labelPumpInterval1.pack()
 		self.pumpIntervalEntry1.pack()
 		self.pumpIntervalBtn1.pack()
@@ -147,27 +130,6 @@ class DripTest:
 				pass
 		return(result[0], self.baud)
 	
-	def CheckFlood(self):
-		if datetime.datetime.now().hour == 0:
-			self.lastFlood = 0
-			self.lastFlood1 = 0
-			
-		if datetime.datetime.now().hour >= (self.lastFlood + self.floodInterval):
-			print(self.lastFlood)
-			print(self.floodInterval)
-			print(datetime.datetime.now().hour)
-			if self.floodState:
-				self.floodState = False
-				self.Flood()
-
-		if datetime.datetime.now().hour >= (self.lastFlood1 + self.floodInterval1):
-			print(self.lastFlood1)
-			print(self.floodInterval1)
-			print(datetime.datetime.now().hour)
-			if self.floodState1:
-				self.floodState1 = False
-				self.Flood1()
-
 	def FloodThread(self):
 		self.ser.write("REFa")
 		time.sleep(3)
@@ -196,7 +158,7 @@ class DripTest:
 		t1.start()
 	
 		
-	def Lights(self):
+	def Lights(self):		
 		if self.lightOnTime[0] > self.lightOffTime[0]:
 			if datetime.datetime.now().hour < int(self.lightOffTime[0][0:2]) or (datetime.datetime.now().hour == int(self.lightOffTime[0][0:2]) and datetime.datetime.now().minute < int(self.lightOffTime[0][3:5])):
 				self.state = True
@@ -235,7 +197,7 @@ class DripTest:
 
 			
 		else:
-			print("Time for off and on should never be the same. Please change the values")
+			print("Time for off and on should never be the same. Please restart the program")
 					
 		if self.state and self.stateOnOff != 1:
 			print("On")
@@ -313,6 +275,15 @@ class DripTest:
 		print(self.lightOnTime)
 		print(self.lightOffTime)
 			
+
+	'''			
+	def SetLightOffTime(self):
+		print(self.lightOffEntry.get())
+		self.lightOffTime = self.lightOffEntry.get().strip().split(',')
+		self.lightOffTime.sort()
+		self.lightOffTime = [x.strip() for x in self.lightOffTime]
+	'''
+
 	def SetPumpInterval(self):
 		print(self.pumpIntervalEntry.get())
 		self.floodInterval = int(self.pumpIntervalEntry.get())
@@ -330,6 +301,11 @@ class DripTest:
 		print(self.lightOnTime1)
 		print(self.lightOffTime1)
 
+	'''
+	def SetLightOffTime1(self):
+		print(self.lightOffEntry1.get())
+		self.lightOffTime1 = self.lightOffEntry1.get()
+	'''
 	def SetPumpInterval1(self):
 		print(self.pumpIntervalEntry1.get())
 		self.floodInterval1 = int(self.pumpIntervalEntry1.get())
@@ -342,10 +318,123 @@ class DripTest:
 
 		##self.GetTemperature()
 
-		self.CheckFlood()
+		if datetime.datetime.now().hour == 0:
+			self.lastFlood = 0
+			self.lastFlood1 = 0
+			
+		if datetime.datetime.now().hour >= (self.lastFlood + self.floodInterval):
+			print(self.lastFlood)
+			print(self.floodInterval)
+			print(datetime.datetime.now().hour)
+			if self.floodState:
+				self.floodState = False
+				self.Flood()
+
+		if datetime.datetime.now().hour >= (self.lastFlood1 + self.floodInterval1):
+			print(self.lastFlood1)
+			print(self.floodInterval1)
+			print(datetime.datetime.now().hour)
+			if self.floodState1:
+				self.floodState1 = False
+				self.Flood1()
 			
 		self.Lights()
 		self.Lights1()
+
+		'''
+		if (self.lightOnHour > self.lightOffHour) or (self.lightOnHour == self.lightOffHour and self.lightOnMinute > self.lightOffMinute):
+
+			if datetime.datetime.now().hour >= self.lightOnHour and datetime.datetime.now().minute	>= self.lightOnMinute:
+				if(self.stateLight != 1):
+					time.sleep(2)
+					self.ser.write("REFc")
+					time.sleep(2)
+					self.stateLight = 1
+					print('a')
+			elif datetime.datetime.now().hour >= self.lightOffHour and datetime.datetime.now().minute >= self.lightOffMinute:
+				if(self.stateLight != 2):
+					time.sleep(1)
+					self.ser.write("REFd")
+					time.sleep(2)
+					self.stateLight = 2
+					print('b')
+			else:
+				if(self.stateLight != 3):
+					time.sleep(1)
+					self.ser.write("REFc")
+					time.sleep(2)
+					self.stateLight = 3
+					print('c')
+		else:
+			if (datetime.datetime.now().hour == self.lightOffHour and datetime.datetime.now().minute >= self.lightOffMinute) or datetime.datetime.now().hour > self.lightOffHour:
+				if(self.stateLight != 4):
+					time.sleep(1)
+					self.ser.write("REFd")
+					time.sleep(2)
+					self.stateLight = 4
+					print('d')
+			elif (datetime.datetime.now().hour == self.lightOnHour and datetime.datetime.now().minute	>= self.lightOnMinute) or datetime.datetime.now().hour > self.lightOnHour:
+				if(self.stateLight != 5):
+					time.sleep(1)
+					self.ser.write("REFc")
+					time.sleep(2)
+					self.stateLight = 5
+					print('e')
+			else:
+				if(self.stateLight != 6):
+					time.sleep(1)
+					self.ser.write("REFd")
+					time.sleep(2)
+					self.stateLight = 6
+					print('f')
+		
+		if (self.lightOnHour1 > self.lightOffHour1) or (self.lightOnHour1 == self.lightOffHour1 and self.lightOnMinute1 > self.lightOffMinute1):
+
+			if datetime.datetime.now().hour >= self.lightOnHour1 and datetime.datetime.now().minute	>= self.lightOnMinute1:
+				if(self.stateLight1 != 1):
+					time.sleep(2)
+					self.ser.write("REFg")
+					time.sleep(2)
+					self.stateLight1 = 1
+					print('a1')
+			elif datetime.datetime.now().hour >= self.lightOffHour1 and datetime.datetime.now().minute >= self.lightOffMinute1:
+				if(self.stateLight1 != 2):
+					time.sleep(1)
+					self.ser.write("REFh")
+					time.sleep(2)
+					self.stateLight1 = 2
+					print('b1')
+			else:
+				if(self.stateLight1 != 3):
+					time.sleep(1)
+					self.ser.write("REFg")
+					time.sleep(2)
+					self.stateLight1 = 3
+					print('c1')
+		else:
+			if (datetime.datetime.now().hour == self.lightOffHour1 and datetime.datetime.now().minute >= self.lightOffMinute1) or datetime.datetime.now().hour > self.lightOffHour1:
+				if(self.stateLight1 != 4):
+					time.sleep(1)
+					self.ser.write("REFh")
+					time.sleep(2)
+					self.stateLight1 = 4
+					print('d1')
+			elif (datetime.datetime.now().hour == self.lightOnHour1 and datetime.datetime.now().minute	>= self.lightOnMinute1) or datetime.datetime.now().hour > self.lightOnHour1:
+				if(self.stateLight1 != 5):
+					time.sleep(1)
+					self.ser.write("REFg")
+					time.sleep(2)
+					self.stateLight1 = 5
+					print('e1')
+			else:
+				if(self.stateLight1 != 6):
+					time.sleep(1)
+					self.ser.write("REFh")
+					time.sleep(2)
+					self.stateLight1 = 6
+					print('f1')
+		'''
+		
 
 		self.stateSerial = True
 		
