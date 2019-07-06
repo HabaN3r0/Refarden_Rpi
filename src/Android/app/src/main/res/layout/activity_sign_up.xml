@@ -7,17 +7,26 @@
     android:background="@drawable/background"
     tools:context="kenneth.com.refardenapp.SignUpActivity">
 
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:layout_alignStart="@+id/menuButton"
+        android:layout_above="@+id/description"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/ic_action_back" />
+
     <TextView
         android:id="@+id/welcomeMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="79dp"
-        android:text="Welcome to Refarden"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="48dp"
+        android:text="Create an Account"
         android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/description"
@@ -25,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/welcomeMsg"
         android:layout_below="@+id/welcomeMsg"
-        android:text="Start connection your fridge garden"
+        android:layout_marginTop="16dp"
+        android:text="Enter the email address to create your account"
         android:textColor="@color/white" />
 
     <Button
