@@ -1,9 +1,11 @@
 package kenneth.com.refardenapp;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -11,6 +13,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputLayout textInputEmail;
     private TextInputLayout textInputPassword;
     private TextInputLayout textInputConfirmPassword;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,15 @@ public class SignUpActivity extends AppCompatActivity {
         textInputEmail = findViewById(R.id.emailInput);
         textInputPassword = findViewById(R.id.passwordInput);
         textInputConfirmPassword = findViewById(R.id.confirmPasswordInput);
+
+        backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                closeSignUpActivity();
+            }
+        });
     }
 
     private boolean validateEmail() {
@@ -85,5 +97,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
 
+    }
+
+    public void closeSignUpActivity() {
+        finish();
     }
 }
