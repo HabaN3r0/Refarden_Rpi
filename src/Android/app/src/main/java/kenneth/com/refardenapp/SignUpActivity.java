@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private TextInputLayout textInputEmail;
@@ -72,8 +75,9 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }
 
-        else if (passwordInput != confirmPasswordInput) {
-            textInputConfirmPassword.setError("Password is not the same");
+        else if (!passwordInput.equals(confirmPasswordInput)) {
+            textInputConfirmPassword.setError("Password is not the same" + passwordInput + " " + confirmPasswordInput);
+
             return false;
 
         }
@@ -90,10 +94,34 @@ public class SignUpActivity extends AppCompatActivity {
         if (!validateEmail() | !validatePassword() | !validateConfirmPassword()) {
             return;
         }
+        String emailInput = textInputEmail.getEditText().getText().toString().trim();
+        String passwordInput = textInputPassword.getEditText().getText().toString().trim();
 
-        String input = "Email: " + textInputEmail.getEditText().getText().toString().trim();
+        String input = "Email: " + emailInput;
         input += "\n";
-        input += "Password: " + textInputPassword.getEditText().getText().toString().trim();
+        input += "Password: " + passwordInput;
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+//        // Read from the database
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                String value = dataSnapshot.getValue(String.class);
+//                Log.d(TAG, "Value is: " + value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
+
+        myRef.child("User Accounts").child(emailInput).setValue(passwordInput);
 
         Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
 
