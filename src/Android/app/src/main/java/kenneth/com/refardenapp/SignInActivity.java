@@ -94,32 +94,54 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateAccount() {
-        return true;
-    }
-
-    public void searchDatabase(DataSnapshot dataSnapshot) {
+    private void validateAccount() {
         String emailInput = textInputEmail.getEditText().getText().toString().trim();
         String passwordInput = textInputPassword.getEditText().getText().toString().trim();
-        setFlag(false);
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            if (ds.getKey().equals(emailInput) && ds.getValue().equals(passwordInput)) {
-                setFlag(true);
-                Log.d(TAG, "In search database");
-            }
+        mAuth.signInWithEmailAndPassword(emailInput, passwordInput)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+//                           updateUI(user);
+                            openMainActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(SignInActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+//                           updateUI(null);
+                        }
 
-        }
+                        // ...
+                    }
+                });
     }
 
-    private void setFlag(boolean flag) {
-        this.flag = flag;
-        Log.d(TAG, "In set flag");
-    }
-
-    private boolean getFlag() {
-        Log.d(TAG, "In get flag");
-        return this.flag;
-    }
+//    public void searchDatabase(DataSnapshot dataSnapshot) {
+//        String emailInput = textInputEmail.getEditText().getText().toString().trim();
+//        String passwordInput = textInputPassword.getEditText().getText().toString().trim();
+//        setFlag(false);
+//        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//            if (ds.getKey().equals(emailInput) && ds.getValue().equals(passwordInput)) {
+//                setFlag(true);
+//                Log.d(TAG, "In search database");
+//            }
+//
+//        }
+//    }
+//
+//    private void setFlag(boolean flag) {
+//        this.flag = flag;
+//        Log.d(TAG, "In set flag");
+//    }
+//
+//    private boolean getFlag() {
+//        Log.d(TAG, "In get flag");
+//        return this.flag;
+//    }
 
     public void openSignUpActivity(){
 
@@ -137,29 +159,8 @@ public class SignInActivity extends AppCompatActivity {
        if (!validateEmail() | !validatePassword()) {
            return;
        }
+       validateAccount();
 
-//       mAuth.signInWithEmailAndPassword(email, password)
-//               .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                   @Override
-//                   public void onComplete(@NonNull Task<AuthResult> task) {
-//                       if (task.isSuccessful()) {
-//                           // Sign in success, update UI with the signed-in user's information
-//                           Log.d(TAG, "signInWithEmail:success");
-//                           FirebaseUser user = mAuth.getCurrentUser();
-//                           updateUI(user);
-//                       } else {
-//                           // If sign in fails, display a message to the user.
-//                           Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                           Toast.makeText(SignInActivity.this, "Authentication failed.",
-//                                   Toast.LENGTH_SHORT).show();
-//                           updateUI(null);
-//                       }
-//
-//                       // ...
-//                   }
-//               });
-
-        openMainActivity();
    }
 
 }

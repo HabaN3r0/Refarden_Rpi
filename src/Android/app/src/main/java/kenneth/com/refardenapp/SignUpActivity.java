@@ -111,34 +111,33 @@ public class SignUpActivity extends AppCompatActivity {
         input += "\n";
         input += "Password: " + passwordInput;
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-
         mAuth.createUserWithEmailAndPassword(emailInput, passwordInput)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            String emailInput = textInputEmail.getEditText().getText().toString().trim();
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, String.valueOf(user));
+                            Toast.makeText(SignUpActivity.this, emailInput + " Account Created", Toast.LENGTH_SHORT).show();
 
                             // TODO: should display something to show that the user is logged into his account
                             // updateUI(user)
+                            finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, task.getException().toString(),
+                                    Toast.LENGTH_LONG).show();
 //                            updateUI(null);
                         }
 
                     }
                 });
 
-        Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
-        finish();
+//        Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
 
     }
 
