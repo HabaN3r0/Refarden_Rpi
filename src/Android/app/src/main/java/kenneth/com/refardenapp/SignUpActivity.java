@@ -121,7 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG, String.valueOf(user));
-                            Toast.makeText(SignUpActivity.this, emailInput + " Account Created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, emailInput + " account Created", Toast.LENGTH_SHORT).show();
 
                             // TODO: should display something to show that the user is logged into his account
                             // updateUI(user)
