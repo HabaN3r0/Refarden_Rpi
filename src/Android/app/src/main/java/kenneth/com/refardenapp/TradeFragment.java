@@ -16,6 +16,11 @@ public class TradeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trade, container, false);
+        View view = inflater.inflate(R.layout.fragment_trade, container, false);
+
+        //Set Fragment Title
+        getActivity().setTitle("Trade Market");
+
+        return view;
     }
 }
