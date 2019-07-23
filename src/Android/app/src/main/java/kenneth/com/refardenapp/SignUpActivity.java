@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         else if (!passwordInput.equals(confirmPasswordInput)) {
-            textInputConfirmPassword.setError("Password is not the same" + passwordInput + " " + confirmPasswordInput);
+            textInputConfirmPassword.setError("Passwords are not the same!");
 
             return false;
 
