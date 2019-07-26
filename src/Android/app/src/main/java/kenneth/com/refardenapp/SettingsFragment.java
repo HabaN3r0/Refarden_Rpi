@@ -13,11 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -39,31 +43,73 @@ public class SettingsFragment extends Fragment {
     private TextView lightPercent;
     private TextView concPercent;
     private TextView freqPercent;
+    private LinearLayout settingsTemp;
+    private LinearLayout settingsLight;
+    private LinearLayout settingsConc;
+    private LinearLayout settingsFreq;
 
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("Settings Conditions");
 
         //Set Fragment Title
         getActivity().setTitle("Settings");
 
-        //Initialise the seekbars
-        setTempSeek(view);
-        setLightSeek(view);
-        setConcSeek(view);
-        setFreqSeek(view);
+        autoSwitch = view.findViewById(R.id.settingsAutomateSwitch);
+        settingsTemp = view.findViewById(R.id.settingsTemperature);
+        tempSeek = view.findViewById(R.id.settingsTemperatureSeek);
+        tempPercent = view.findViewById(R.id.settingsTemperaturePercent);
+
+        settingsLight = view.findViewById(R.id.settingsLight);
+        lightSeek = view.findViewById(R.id.settingsLightSeek);
+        lightPercent = view.findViewById(R.id.settingsLightPercent);
+
+
+        settingsConc = view.findViewById(R.id.settingsConcentration);
+        concSeek = view.findViewById(R.id.settingsConcentrationSeek);
+        concPercent = view.findViewById(R.id.settingsConcentrationPercent);
+
+        settingsFreq = view.findViewById(R.id.settingsWaterFrequency);
+        freqSeek = view.findViewById(R.id.settingsWaterFrequencySeek);
+        freqPercent = view.findViewById(R.id.settingsWaterFrequencyPercent);
+
+        autoSwitch.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (autoSwitch.isChecked()){
+                            settingsTemp.setVisibility(View.INVISIBLE);
+                            settingsLight.setVisibility(View.INVISIBLE);
+                            settingsConc.setVisibility(View.INVISIBLE);
+                            settingsFreq.setVisibility(View.INVISIBLE);
+                        }
+                        else {
+                            settingsTemp.setVisibility(View.VISIBLE);
+                            settingsLight.setVisibility(View.VISIBLE);
+                            settingsConc.setVisibility(View.VISIBLE);
+                            settingsFreq.setVisibility(View.VISIBLE);
+                            //Initialise the seekbars
+                            setTempSeek(view, myRef);
+                            setLightSeek(view, myRef);
+                            setConcSeek(view, myRef);
+                            setFreqSeek(view, myRef);
+                        }
+                    }
+                }
+        );
 
         return view;
     }
 
-    public void setTempSeek(View view){
+    public void setTempSeek(View view, final DatabaseReference myRef){
         int maxTemp = 30;
-        tempSeek = view.findViewById(R.id.settingsTemperatureSeek);
         tempSeek.setMax(maxTemp);
-        tempPercent = view.findViewById(R.id.settingsTemperaturePercent);
         tempPercent.setText(tempSeek.getProgress() + "°C");
 
         tempSeek.setOnSeekBarChangeListener(
@@ -84,17 +130,17 @@ public class SettingsFragment extends Fragment {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         tempPercent.setText(progressValue + "°C");
                         //TODO: Send info to firebase
+                        myRef.child("Temperature").setValue(progressValue);
+
                     }
                 }
         );
 
     }
 
-    public void setLightSeek(View view){
+    public void setLightSeek(View view, final DatabaseReference myRef){
         int maxLight = 1000;
-        lightSeek = view.findViewById(R.id.settingsLightSeek);
         lightSeek.setMax(maxLight);
-        lightPercent = view.findViewById(R.id.settingsLightPercent);
         lightPercent.setText(lightSeek.getProgress() + "lm");
 
         lightSeek.setOnSeekBarChangeListener(
@@ -115,17 +161,16 @@ public class SettingsFragment extends Fragment {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         lightPercent.setText(progressValue + "lm");
                         //TODO: Send info to firebase
+                        myRef.child("Light").setValue(progressValue);
                     }
                 }
         );
 
     }
 
-    public void setConcSeek(View view){
+    public void setConcSeek(View view, final DatabaseReference myRef){
         int maxConc = 100;
-        concSeek = view.findViewById(R.id.settingsConcentrationSeek);
         concSeek.setMax(maxConc);
-        concPercent = view.findViewById(R.id.settingsConcentrationPercent);
         concPercent.setText(concSeek.getProgress() + "%");
 
         concSeek.setOnSeekBarChangeListener(
@@ -146,16 +191,15 @@ public class SettingsFragment extends Fragment {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         concPercent.setText(progressValue + "%");
                         //TODO: Send info to firebase
+                        myRef.child("Solution").setValue(progressValue);
                     }
                 }
         );
     }
 
-    public void setFreqSeek(View view){
+    public void setFreqSeek(View view, final DatabaseReference myRef){
         int maxFreq = 60;
-        freqSeek = view.findViewById(R.id.settingsWaterFrequencySeek);
         freqSeek.setMax(maxFreq);
-        freqPercent = view.findViewById(R.id.settingsWaterFrequencyPercent);
         freqPercent.setText(freqSeek.getProgress() + "sec");
 
         freqSeek.setOnSeekBarChangeListener(
@@ -176,6 +220,7 @@ public class SettingsFragment extends Fragment {
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         freqPercent.setText(progressValue + "sec");
                         //TODO: Send info to firebase
+                        myRef.child("Frequency").setValue(progressValue);
                     }
                 }
         );
