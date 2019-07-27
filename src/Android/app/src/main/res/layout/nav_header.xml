@@ -9,17 +9,20 @@
     android:theme="@style/TextInputLayoutAppearance">
 
     <ImageView
+        android:id="@+id/profileImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher_round"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:text="Name"
-        android:textAppearance="@style/TextInputLayoutAppearance"/>
+    <!--<TextView-->
+        <!--android:id="@+id/profileName"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:text="Name"-->
+        <!--android:textAppearance="@style/TextInputLayoutAppearance"/>-->
 
     <TextView
+        android:id="@+id/profileEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="email"/>

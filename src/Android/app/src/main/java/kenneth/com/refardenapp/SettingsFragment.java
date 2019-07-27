@@ -20,6 +20,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,6 +48,7 @@ public class SettingsFragment extends Fragment {
     private LinearLayout settingsLight;
     private LinearLayout settingsConc;
     private LinearLayout settingsFreq;
+    private FirebaseAuth mAuth;
 
 
 
@@ -55,8 +57,9 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_settings, container, false);
         // Write a message to the database
+        mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("Settings Conditions");
+        final DatabaseReference myRef = database.getReference("User Accounts").child(mAuth.getCurrentUser().getUid()).child("Settings Conditions");
 
         //Set Fragment Title
         getActivity().setTitle("Settings");

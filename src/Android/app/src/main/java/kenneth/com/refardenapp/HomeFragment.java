@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,7 @@ public class HomeFragment extends Fragment {
     private TextView textViewLight;
     private TextView textViewWater;
     private TextView textViewPh;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -39,13 +41,14 @@ public class HomeFragment extends Fragment {
         textViewLight = view.findViewById(R.id.light);
         textViewWater = view.findViewById(R.id.water);
         textViewPh = view.findViewById(R.id.ph);
+        mAuth = FirebaseAuth.getInstance();
 
         //Set Fragment Title
         getActivity().setTitle("Home");
 
         // Creating database instance and reference
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("Growing Conditions");
+        DatabaseReference myRef = database.getReference("User Accounts").child(mAuth.getCurrentUser().getUid()).child("Growing Conditions");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {

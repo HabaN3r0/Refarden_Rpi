@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
+//    private TextInputLayout textInputName;
     private TextInputLayout textInputEmail;
     private TextInputLayout textInputPassword;
     private TextInputLayout textInputConfirmPassword;
@@ -32,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+//        textInputName = findViewById(R.id.nameInput);
         textInputEmail = findViewById(R.id.emailInput);
         textInputPassword = findViewById(R.id.passwordInput);
         textInputConfirmPassword = findViewById(R.id.confirmPasswordInput);
@@ -106,6 +108,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
         String emailInput = textInputEmail.getEditText().getText().toString().trim();
         String passwordInput = textInputPassword.getEditText().getText().toString().trim();
+//        String nameInput = textInputName.getEditText().getText().toString().trim();
 
         String input = "Email: " + emailInput;
         input += "\n";
@@ -125,6 +128,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                             // TODO: should display something to show that the user is logged into his account
                             // updateUI(user)
+                            createFirebaseAccount(user);
+
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -136,9 +141,27 @@ public class SignUpActivity extends AppCompatActivity {
 
                     }
                 });
-
 //        Toast.makeText(this, input, Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void createFirebaseAccount(FirebaseUser currentUser) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("User Accounts").child(currentUser.getUid());
+        myRef.child("Growing Conditions").child("Temperature").setValue(0);
+        myRef.child("Growing Conditions").child("Solution").setValue(0);
+        myRef.child("Growing Conditions").child("Humidity").setValue(0);
+        myRef.child("Growing Conditions").child("Light").setValue(0);
+        myRef.child("Growing Conditions").child("Water").setValue(0);
+        myRef.child("Growing Conditions").child("Ph").setValue(0);
+
+        myRef.child("Settings Conditions").child("Temperature").setValue(0);
+        myRef.child("Settings Conditions").child("Light").setValue(0);
+        myRef.child("Settings Conditions").child("Solution").setValue(0);
+        myRef.child("Settings Conditions").child("Frequency").setValue(0);
+
+        //TODO: Add in all the stuff needed for an account
     }
 
     public void closeSignUpActivity() {

@@ -62,6 +62,10 @@ public class SignInActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
 //        updateUI(currentUser);
     }
 
@@ -104,7 +108,9 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            user.getUid();
+
 //                           updateUI(user);
                             openMainActivity();
                         } else {
@@ -151,6 +157,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void openMainActivity() {
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

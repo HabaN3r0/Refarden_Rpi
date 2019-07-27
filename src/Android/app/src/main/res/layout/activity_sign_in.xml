@@ -34,14 +34,14 @@
         android:text="Start connection your fridge garden"
         android:textColor="@color/white" />
 
-    <Button
-        android:id="@+id/menuButton"
-        android:layout_width="27dp"
-        android:layout_height="32dp"
-        android:layout_alignStart="@+id/description"
-        android:layout_below="@+id/description"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ic_action_menu" />
+    <!--<Button-->
+        <!--android:id="@+id/menuButton"-->
+        <!--android:layout_width="27dp"-->
+        <!--android:layout_height="32dp"-->
+        <!--android:layout_alignStart="@+id/description"-->
+        <!--android:layout_below="@+id/description"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:background="@drawable/ic_action_menu" />-->
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/emailInput"
@@ -94,9 +94,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/welcomeMsg"
-        android:layout_below="@id/menuButton"
+        android:layout_below="@id/passwordInput"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/transparent_bg_bordered_button"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
