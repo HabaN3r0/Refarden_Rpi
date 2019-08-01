@@ -87,6 +87,8 @@ public class HomeFragment extends Fragment {
                 textViewWater.setText(ds.getValue() + "/1000 ml");
             } else if (ds.getKey().equals("Ph")) {
                 textViewPh.setText(ds.getValue() + "%");
+            } else{
+
             }
 
         }

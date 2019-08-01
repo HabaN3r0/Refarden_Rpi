@@ -2,6 +2,7 @@ package kenneth.com.refardenapp;
 
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Make Status bar transparent
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+
+
         setContentView(R.layout.activity_main);
         drawer = findViewById(R.id.drawer_layout);
         mAuth = FirebaseAuth.getInstance();
@@ -70,28 +81,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Name, email address, and profile photo Url
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             View headerView = navigationView.getHeaderView(0);
-            TextView profileEmail = (TextView) headerView.findViewById(R.id.profileEmail);
+            final TextView profileName = (TextView) headerView.findViewById(R.id.profileName);
+            // Creating database instance and reference
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("User Accounts").child(mAuth.getCurrentUser().getUid()).child("Profile");
 
-            String name = currentUser.getDisplayName();
-            String email = currentUser.getEmail();
-            Uri photoUrl = currentUser.getPhotoUrl();
+            // Read from the database
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    //Call another function to update the UI on the screen by passing in datasnapshot which is like the info
+                    updateNav(dataSnapshot, profileName);
+                }
 
-            // Check if user's email is verified
-            boolean emailVerified = currentUser.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = currentUser.getUid();
-            Log.d(TAG, "Name is  " + name);
-            Log.d(TAG, "Email is  " + email);
-            Log.d(TAG, "uid is  " + uid);
-
-            profileEmail.setText(email);
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w(TAG, "Failed to read value.", error.toException());
+                }
+            });
 //            profileImage.setImageURI(photoUrl);
 
         }
 
+    }
+
+    private void updateNav(DataSnapshot dataSnapshot, TextView profileName) {
+        for (DataSnapshot ds : dataSnapshot.getChildren()){
+            Log.d(TAG, "ds is:  " + ds.getKey());
+            GrowingConditions growCond = new GrowingConditions();
+            if (ds.getKey().equals("Name")) {
+                profileName.setText(ds.getValue().toString());
+            }
+        }
     }
 
 

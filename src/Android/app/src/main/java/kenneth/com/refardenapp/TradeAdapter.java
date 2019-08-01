@@ -16,8 +16,9 @@ import java.util.ArrayList;
 public class TradeAdapter extends RecyclerView.Adapter<TradeAdapter.TradeViewHolder> {
 
     private ArrayList<TradeItem> mTradeList;
+    private OnClickListener mOnClickListener;
 
-    public static class TradeViewHolder extends RecyclerView.ViewHolder {
+    public static class TradeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public ImageView mImageView;
         public TextView mTitleTextView;
@@ -27,8 +28,9 @@ public class TradeAdapter extends RecyclerView.Adapter<TradeAdapter.TradeViewHol
         public ImageView mStar3;
         public ImageView mStar4;
         public ImageView mStar5;
+        OnClickListener onClickListener;
 
-        public TradeViewHolder(View itemView) {
+        public TradeViewHolder(View itemView, OnClickListener onClickListener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.tradeImage);
             mTitleTextView = itemView.findViewById(R.id.tradeTitle);
@@ -39,37 +41,52 @@ public class TradeAdapter extends RecyclerView.Adapter<TradeAdapter.TradeViewHol
             mStar4 = itemView.findViewById(R.id.tradeStar4);
             mStar5 = itemView.findViewById(R.id.tradeStar5);
 
+            this.onClickListener = onClickListener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            onClickListener.onClick(getAdapterPosition());
         }
     }
 
-    public TradeAdapter(ArrayList<TradeItem> tradeList) {
+    public TradeAdapter(ArrayList<TradeItem> tradeList, OnClickListener onClickListener) {
 
         mTradeList = tradeList;
+        mOnClickListener = onClickListener;
     }
 
     @Override
     public TradeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trade_item, parent, false);
-        TradeViewHolder tvh = new TradeViewHolder(view);
-        return  tvh;
+        TradeViewHolder tvh = new TradeViewHolder(view, mOnClickListener);
+        return (tvh);
     }
 
     @Override
     public void onBindViewHolder(TradeViewHolder holder, int position) {
         TradeItem currentItem = mTradeList.get(position);
 
-        holder.mImageView.setImageResource(currentItem.getImageResource());
-        holder.mTitleTextView.setText(currentItem.getTitle());
-        holder.mDescriptionTextView.setText(currentItem.getDescription());
-        holder.mStar1.setImageResource(currentItem.getStar1());
-        holder.mStar2.setImageResource(currentItem.getStar2());
-        holder.mStar3.setImageResource(currentItem.getStar3());
-        holder.mStar4.setImageResource(currentItem.getStar4());
-        holder.mStar5.setImageResource(currentItem.getStar5());
+        holder.mImageView.setImageResource(currentItem.getmPlantImage());
+        holder.mTitleTextView.setText(currentItem.getmPlantType());
+        holder.mDescriptionTextView.setText(currentItem.getmDescription());
+        holder.mStar1.setImageResource(currentItem.getmStar1());
+        holder.mStar2.setImageResource(currentItem.getmStar2());
+        holder.mStar3.setImageResource(currentItem.getmStar3());
+        holder.mStar4.setImageResource(currentItem.getmStar4());
+        holder.mStar5.setImageResource(currentItem.getmStar5());
     }
 
     @Override
     public int getItemCount() {
         return mTradeList.size();
     }
+
+    public interface OnClickListener {
+        void onClick(int position);
+    }
+
 }

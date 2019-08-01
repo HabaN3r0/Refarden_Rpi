@@ -10,9 +10,14 @@ import org.w3c.dom.Text;
 
 public class TradeItem {
 
-    private int mImageResource;
-    private String mTitle;
+    private String mUid;
+    private String mTimeStamp;
+    private int mPlantImage;
+    private String mPlantType;
+    private String mPlantsWanted;
     private String mDescription;
+    private String mUserName;
+    private String mRequest;
     private int mstar1;
     private int mstar2;
     private int mstar3;
@@ -20,10 +25,15 @@ public class TradeItem {
     private int mstar5;
 
 
-    public TradeItem(int imageResource, String title, String description, int star1, int star2, int star3, int star4, int star5) {
-        mImageResource = imageResource;
-        mTitle = title;
+    public TradeItem(String uid, String timeStamp, int plantImage, String plantType, String plantsWanted, String description, String userName, String request, int star1, int star2, int star3, int star4, int star5) {
+        mUid = uid;
+        mTimeStamp = timeStamp;
+        mPlantImage = plantImage;
+        mPlantType = plantType;
+        mPlantsWanted = plantsWanted;
         mDescription = description;
+        mUserName = userName;
+        mRequest = request;
         mstar1 = star1;
         mstar2 = star2;
         mstar3 = star3;
@@ -31,35 +41,49 @@ public class TradeItem {
         mstar5 = star5;
     }
 
-    public int getImageResource() {
-        return mImageResource;
+    public String getmTimeStamp() {
+        return mTimeStamp;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public String getmUid() {
+        return mUid;
     }
 
-    public String getDescription() {
+    public int getmPlantImage() {
+        return mPlantImage;
+    }
+
+    public String getmPlantType() {
+        return mPlantType;
+    }
+
+    public String getmPlantsWanted() { return mPlantsWanted; }
+
+    public String getmDescription() {
         return mDescription;
     }
 
-    public int getStar1() {
+    public String getmUserName() { return mUserName; }
+
+    public String getmRequest() { return mRequest; }
+
+    public int getmStar1() {
         return mstar1;
     }
 
-    public int getStar2() {
+    public int getmStar2() {
         return mstar2;
     }
 
-    public int getStar3() {
+    public int getmStar3() {
         return mstar3;
     }
 
-    public int getStar4() {
+    public int getmStar4() {
         return mstar4;
     }
 
-    public int getStar5() {
+    public int getmStar5() {
         return mstar5;
     }
 

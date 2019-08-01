@@ -111,21 +111,23 @@
         android:layout_alignStart="@id/welcomeMsg"
         android:layout_below="@id/signInButton"
         android:layout_marginStart="130dp"
-        android:text="New user? Sign up "
+        android:layout_marginTop="5dp"
+        android:text="New user? "
         android:textColor="@color/white"
         android:textSize="12dp" />
 
     <Button
         android:id="@+id/hereButton"
-        android:layout_width="28dp"
+        android:layout_width="wrap_content"
         android:layout_height="16dp"
         android:layout_alignStart="@id/welcomeMsg"
         android:layout_below="@id/signInButton"
-        android:layout_marginStart="230dp"
+        android:layout_marginStart="185dp"
+        android:layout_marginTop="5dp"
         android:background="@color/transparent"
-        android:text="here"
+        android:text="Sign up here"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="12dp" />
 
 

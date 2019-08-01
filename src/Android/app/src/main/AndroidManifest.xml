@@ -15,18 +15,31 @@
             android:name=".SignInActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            android:windowSoftInputMode="stateVisible|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- android:windowSoftInputMode="stateVisible|adjustPan"/> -->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- android:windowSoftInputMode="stateVisible|adjustPan"/> -->
         <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!-- android:windowSoftInputMode="stateVisible|adjustPan"/> -->
+        <activity
+            android:name=".NewTradePostActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- android:windowSoftInputMode="stateVisible|adjustPan"/> -->
+        <activity android:name=".TradeItemActivity"></activity>
     </application>
 
 </manifest>

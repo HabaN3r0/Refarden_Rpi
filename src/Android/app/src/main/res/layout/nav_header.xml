@@ -8,12 +8,18 @@
     android:padding="16dp"
     android:theme="@style/TextInputLayoutAppearance">
 
-    <ImageView
-        android:id="@+id/profileImage"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"/>
-    <!--<TextView-->
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher_round"/>
+        <!--<TextView-->
         <!--android:id="@+id/profileName"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -21,10 +27,14 @@
         <!--android:text="Name"-->
         <!--android:textAppearance="@style/TextInputLayoutAppearance"/>-->
 
-    <TextView
-        android:id="@+id/profileEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="email"/>
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Name"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

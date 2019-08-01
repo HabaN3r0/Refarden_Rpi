@@ -19,17 +19,21 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@color/transparent"
             android:theme="@style/ToolBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:titleTextAppearance="@style/ToolbarText"
+            app:popupTheme="@style/ToolBar" />
         <!--Initiial toolbar size-->
         <!--android:layout_height="?attr/actionBarSize"-->
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
 
     </LinearLayout>
